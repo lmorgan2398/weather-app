@@ -49,9 +49,12 @@ body {
 .overview {
     width: 100%;
     border-radius: 6px;
-    background-color: rgb(93, 163, 255);
+    background-color: gray;
     height: min-content;
     color: white;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .overview-header {
@@ -91,8 +94,36 @@ body {
     padding-top: .25rem;
 }
 
-/* Today's info basic styling */
+/* Dynamic styling for the overview background based on current conditions */
+.overview.default {
+    background-color: gray;
+}
 
+.overview.thunderstorm {
+    background-image: url(./images/backgrounds/thunderstorm.png);
+}
+
+.overview.snow {
+    background-image: url(./images/backgrounds/snow.png);
+}
+
+.overview.rain {
+    background-image: url(./images/backgrounds/rain.png);
+}
+
+.overview.fog {
+    background-image: url(./images/backgrounds/fog.png);
+}
+
+.overview.cloudy {
+    background-image: url(./images/backgrounds/cloudy.png);
+}
+
+.overview.clear {
+    background-image: url(./images/backgrounds/clear.png);
+}
+
+/* Today's info basic styling */
 .today {
     width: 100%;
     background-color: white;
@@ -103,13 +134,42 @@ body {
 }
 
 .today-header {
-    padding: 1rem;
+    padding: 1.2rem;
+    font-weight: bold;
+}
+
+.today-header p {
+    font-size: 1.2rem;
 }
 
 .today .basic-info {
     display: flex;
     padding: 1rem;
     justify-content: space-between;
+}
+
+.feels-like * {
+    font-weight: bold;
+    margin-left: 1rem;
+}
+
+.feels-like .temp {
+    font-size: 3rem;
+}
+
+.basic-info img {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.sunrise-sunset {
+    display: flex;
+}
+
+.sunrise-sunset div {
+    display: flex;
+    align-items: center;
+    margin-left: .5rem;
 }
 
 .today .detailed-info {
@@ -123,11 +183,26 @@ body {
     display: flex;
     justify-content: space-between;
     border-top: 1px solid rgb(196, 196, 196);
-    padding: 1rem;
+    padding: .75rem 1rem;
+    align-items: center;
+    height: min-content;
 }
 
 .today .detailed-info .info-stuff {
     display: flex;
+    align-items: center;
+}
+
+.info-stuff img {
+    width: 1.5rem;
+    height: 1.5rem;
+    object-fit: contain;
+    margin-right: .5rem;
+}
+
+.today .stats {
+    width: min-content;
+    text-wrap: nowrap;
 }
 
 /* Hourly section basic styling */

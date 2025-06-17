@@ -4,7 +4,7 @@ import * as api from './api.js';
 
 const loadWeather = async function() {
     try {
-        const weatherData = await api.getWeatherData('new york city, IL');
+        const weatherData = await api.getWeatherData('Nashville, IL');
         ui.renderData(weatherData);
     } catch (err) {
         console.error('Weather loading failed:', err);
