@@ -211,6 +211,9 @@ body {
     display: flex;
     width: 100%;
     flex-direction: column;
+    background-color: white;
+    border-radius: 6px;
+    padding: 1rem;
 }
 
 .forecast-container {
@@ -221,4 +224,13 @@ body {
     height: min-content;
     gap: 1rem;
     padding: .5rem 1rem;
+    background-color: white;
+}
+
+.hour {
+    text-wrap: nowrap;
+    width: min-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

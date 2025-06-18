@@ -1,9 +1,10 @@
-import { parse } from 'date-fns';
+import { parse, startOfHour } from 'date-fns';
 import { format } from 'date-fns-tz';
 
 const renderData = function(data) {
     renderOverview(data);
     renderTodayInfo(data);
+    renderForecastInfo(data);
 }
 
 const renderOverview = function(data) {
@@ -42,6 +43,7 @@ const renderOverview = function(data) {
 }
 
 // Function to get the appropriate class to apply to the overview element for its background
+// Additionally, will apply an img src to hourly forecast info 
 const parseConditionClass = function (condition) {
     // Account for case sensitivity
     const cond = condition.toLowerCase();
@@ -58,6 +60,7 @@ const parseConditionClass = function (condition) {
     return 'default';
 }
 
+// Function to render todays info
 const renderTodayInfo = function(data) {
     // Declare query selectors
     const todayHeaderEle = document.querySelector('.today-header p');
@@ -99,6 +102,7 @@ const renderTodayInfo = function(data) {
     moonPhaseEle.textContent = parseMoonPhaseName(data.currentConditions.moonphase);
 }
 
+// Helper function to parse the literal moon phase name from the API data
 function parseMoonPhaseName(phase) {
   if (phase < 0.03 || phase >= 0.97) return 'New Moon';
   if (phase < 0.22) return 'Waxing Crescent';
@@ -110,6 +114,84 @@ function parseMoonPhaseName(phase) {
   return 'Waning Crescent';
 }
 
+// Function to render the 24-hour hourly forecast
+const renderForecastInfo = function(data) {
+    let forecastHours = document.querySelectorAll('.forecast-container .hour');
+    console.log(forecastHours);
+    const hourlyForecastData = parse24HourData(data.days);
+    forecastHours.forEach((hour) => {
+        console.log('hour selected');
+        // Declare query selectors under each forecast hour
+        const timeEle = hour.querySelector('.time');
+        const forecastImg = hour.querySelector('.icon');
+        const tempEle = hour.querySelector('.temp');
+        const rainfallImgEle = hour.querySelector('.rainfall-image');
+        const rainfallEle = hour.querySelector('.rainfall-text');
+
+        // Get index of element
+        const eleIndex = hour.dataset.index;
+
+        // Get current hour's forecast data
+        const currentData = hourlyForecastData[eleIndex];
+
+        // Render data to elements
+        let parsedTime = parse(currentData.time, 'HH:mm:ss', new Date());
+        timeEle.textContent = format(parsedTime, 'h aa');
+
+        tempEle.textContent = `${Math.floor(currentData.temp)}\u00B0`
+        rainfallEle.textContent = `${currentData.precipProb}%`
+    })
+}
+
+// Function to select the upcoming 24 hours weather conditions from API data
+const parse24HourData = function(days) {
+    // Declare arrays of data pulled from API 
+    const todayData = days[0];
+    const tomorrowData = days[1];
+    const HOURS_IN_DAY = 24;
+
+    // Declare array of parsed data to return
+    let hourlyData = [];
+    
+    // Get current time, rounded to nearest hour and formatted as in API
+    const currentHour = startOfHour(new Date());
+    const formattedCurrentHour = format(currentHour, 'HH:mm:ss');
+
+    // Loop through and find today hour data that matches current hour
+    // Offset start of 24-hour forecast based on current hour of day
+    let currentHourOffset;
+    for(let i = 0; i < HOURS_IN_DAY; i++) {
+        if(todayData.hours[i].datetime == formattedCurrentHour)
+        {
+            currentHourOffset = i;
+        }
+    }
+
+    // Create data objects representing the next 24 hours
+    for (let i = 0; i < HOURS_IN_DAY; i++) {
+        let currentDayData;
+        // Start at the current hour using offset
+        let forecastHour = i + currentHourOffset;
+        // If the hour is past 23:59, loop into the next day and correct the forecast hour 
+        // by 'resetting' to 0 with a -24 decrement and setting the day data to tomorrow
+        if (forecastHour < HOURS_IN_DAY) {
+            currentDayData = todayData;
+        } else {
+            currentDayData = tomorrowData;
+            forecastHour -= 24;
+        }
+        // Create object with parsed data from API
+        let currentHourData = currentDayData.hours[forecastHour]; 
+        let currentHourDataParsed = {
+            time: currentHourData.datetime,
+            conditions: currentHourData.conditions,
+            temp: currentHourData.temp,
+            precipProb: currentHourData.precipprob
+        }
+        hourlyData.push(currentHourDataParsed);
+    }
+    return hourlyData;
+}
 
 
 export { renderData }
