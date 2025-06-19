@@ -1,5 +1,23 @@
 import { parse, startOfHour } from 'date-fns';
-import { format } from 'date-fns-tz';
+import { format, toZonedTime } from 'date-fns-tz';
+
+// Import images
+import thunderstorm from './images/icons/forecast-icons/thunderstorm.png';
+import snow from './images/icons/forecast-icons/snow.png';
+import rain from './images/icons/forecast-icons/rain.png';
+import fog from './images/icons/forecast-icons/fog.png';
+import cloudy from './images/icons/forecast-icons/cloudy.png';
+import clear from './images/icons/forecast-icons/clear.png';
+
+// Bind mapped values to object
+const iconMap = {
+    thunderstorm,
+    snow,
+    rain,
+    fog,
+    cloudy,
+    clear
+};
 
 const renderData = function(data) {
     renderOverview(data);
@@ -117,8 +135,7 @@ function parseMoonPhaseName(phase) {
 // Function to render the 24-hour hourly forecast
 const renderForecastInfo = function(data) {
     let forecastHours = document.querySelectorAll('.forecast-container .hour');
-    console.log(forecastHours);
-    const hourlyForecastData = parse24HourData(data.days);
+    const hourlyForecastData = parse24HourData(data.days, data.timezone);
     forecastHours.forEach((hour) => {
         console.log('hour selected');
         // Declare query selectors under each forecast hour
@@ -129,7 +146,7 @@ const renderForecastInfo = function(data) {
         const rainfallEle = hour.querySelector('.rainfall-text');
 
         // Get index of element
-        const eleIndex = hour.dataset.index;
+        const eleIndex = parseInt(hour.dataset.index, 10);
 
         // Get current hour's forecast data
         const currentData = hourlyForecastData[eleIndex];
@@ -138,13 +155,17 @@ const renderForecastInfo = function(data) {
         let parsedTime = parse(currentData.time, 'HH:mm:ss', new Date());
         timeEle.textContent = format(parsedTime, 'h aa');
 
-        tempEle.textContent = `${Math.floor(currentData.temp)}\u00B0`
-        rainfallEle.textContent = `${currentData.precipProb}%`
+        let conditions = currentData.conditions;
+        let forecastImgSrc = parseConditionClass(conditions);
+        forecastImg.src = iconMap[forecastImgSrc];
+
+        tempEle.textContent = `${Math.floor(currentData.temp)}\u00B0`;
+        rainfallEle.textContent = `${currentData.precipProb}%`;
     })
 }
 
 // Function to select the upcoming 24 hours weather conditions from API data
-const parse24HourData = function(days) {
+const parse24HourData = function(days, timezone) {
     // Declare arrays of data pulled from API 
     const todayData = days[0];
     const tomorrowData = days[1];
@@ -154,8 +175,10 @@ const parse24HourData = function(days) {
     let hourlyData = [];
     
     // Get current time, rounded to nearest hour and formatted as in API
-    const currentHour = startOfHour(new Date());
-    const formattedCurrentHour = format(currentHour, 'HH:mm:ss');
+    const now = new Date();
+    const zonedDate = toZonedTime(now, timezone);
+    const currentHour = startOfHour(zonedDate);
+    const formattedCurrentHour = format(currentHour, 'HH:mm:ss', {timezone});
 
     // Loop through and find today hour data that matches current hour
     // Offset start of 24-hour forecast based on current hour of day

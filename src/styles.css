@@ -44,6 +44,53 @@ body {
     padding: 1rem 4rem;
 }
 
+/* Basic header section styling */
+.header-container .logo {
+    height: 4.5rem;
+    width: 4.5rem;
+    padding: .1rem;
+    background-color: white;
+    border-radius: 6px;
+}
+
+.searchbar {
+    display: flex;
+    align-items: center;
+}
+
+.search-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.search-button img {
+    background-color: rgb(21, 21, 63);
+    width: 2rem;
+    height: 2rem;
+}
+
+#search {
+    font-size: 1.2rem;
+    padding: .5rem 1rem;
+    color: black;
+    border-radius: 6px;
+    background-color: whitesmoke;
+    border: 2px solid rgb(21, 21, 63);
+    outline: none;
+}
+
+#search:hover,
+#search:focus {
+    outline: none;
+    border: 2px solid rgb(69, 69, 70);
+    background-color: rgb(198, 198, 230);
+}
+
+#search::placeholder {
+    color:rgb(64, 64, 78);
+}
 /* Overview section basic styling */
 
 .overview {
@@ -213,7 +260,22 @@ body {
     flex-direction: column;
     background-color: white;
     border-radius: 6px;
-    padding: 1rem;
+}
+
+.hourly-header {
+    padding: 1rem 1rem 1rem 1rem;
+    background-color: rgb(34, 34, 65);
+    border-radius: 6px 6px 0px 0px;
+}
+
+.hourly-header p {
+    font-size: 1.2rem;
+    color: white;
+}
+
+.forecast-container-container {
+    display: flex;
+    padding: .5rem;
 }
 
 .forecast-container {
@@ -222,8 +284,8 @@ body {
     overflow-x: scroll;
     overflow-y: hidden;
     height: min-content;
-    gap: 1rem;
-    padding: .5rem 1rem;
+    gap: 1.5rem;
+    padding: .5rem 1rem 1rem;
     background-color: white;
 }
 
@@ -233,4 +295,22 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.hour .icon {
+    width: 2rem;
+    height: 2rem;
+}
+
+.rainfall {
+    display: flex;
+}
+
+.rainfall p {
+    font-size: .8rem;
+}
+
+.rainfall-img {
+    height: .8rem;
+    width: .8rem;
 }
