@@ -91,6 +91,21 @@ body {
 #search::placeholder {
     color:rgb(64, 64, 78);
 }
+
+.degrees-button {
+    width: 4.5rem;
+    height: 4.5rem;
+    padding: 1rem;
+    background-color: white;
+    color: rgb(34, 34, 65);
+    font-size: 1.8rem;
+    border-radius: 6px;
+}
+
+.degrees-button:hover {
+    background-color: lightgray;
+    cursor: pointer;
+}
 /* Overview section basic styling */
 
 .overview {

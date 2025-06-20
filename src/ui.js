@@ -19,13 +19,42 @@ const iconMap = {
     clear
 };
 
-const renderData = function(data) {
-    renderOverview(data);
-    renderTodayInfo(data);
+const renderData = function(data, system) {
+    // Use provided measurement system to store measurement units in obj units
+    let units = {};
+    if (system == 'us') {
+        {
+        units.degrees = `\u00B0F`,
+        units.pressure = 'in',
+        units.length = 'mi',
+        units.speed = 'mph'
+        units.inHgConversionValue = 33.8639;
+        units.toFixed = 2
+        }
+    } else {
+        {
+            units.degrees = '\u00B0C',
+            units.pressure = 'hPa',
+            units.length = 'km',
+            units.speed = 'kmph'
+            units.inHgConversionValue = 1;
+            units.toFixed = 0
+        }
+    }
+    toggleDegreesButton(units);
+    renderOverview(data, units);
+    renderTodayInfo(data, units);
     renderForecastInfo(data);
 }
 
-const renderOverview = function(data) {
+// Function to change display of degree measurement toggle button
+const toggleDegreesButton = function(units) {
+    let degreesButton = document.querySelector('.degrees-button');
+    degreesButton.textContent = units.degrees;
+} ;
+
+// Function to render overview section
+const renderOverview = function(data, units) {
     // Declare query selectors
     const overviewEle = document.querySelector('.overview');
     const locationEle = document.querySelector('.overview .location');
@@ -51,13 +80,13 @@ const renderOverview = function(data) {
     timeEle.textContent = `As of ${formattedTime}`;
 
     // Current temperature rounded down
-    temperatureEle.textContent = `${Math.floor(data.currentConditions.temp)}\u00B0F`;
+    temperatureEle.textContent = `${Math.floor(data.currentConditions.temp)}${units.degrees}`;
 
     // Summary of current conditions
     weatherEle.textContent = `${condition}`;
 
     // High and lows for the day, rounded
-    dayNightEle.textContent = `High ${Math.floor(data.days[0].tempmax)}\u00B0F \u2022 Low ${Math.floor(data.days[0].tempmin)}\u00B0F`;
+    dayNightEle.textContent = `High ${Math.floor(data.days[0].tempmax)}${units.degrees} \u2022 Low ${Math.floor(data.days[0].tempmin)}${units.degrees}`;
 }
 
 // Function to get the appropriate class to apply to the overview element for its background
@@ -79,7 +108,7 @@ const parseConditionClass = function (condition) {
 }
 
 // Function to render todays info
-const renderTodayInfo = function(data) {
+const renderTodayInfo = function(data, units) {
     // Declare query selectors
     const todayHeaderEle = document.querySelector('.today-header p');
     const feelsLikeEle = document.querySelector('.basic-info .feels-like .temp');
@@ -99,7 +128,7 @@ const renderTodayInfo = function(data) {
 
     // Populate header with current info
     todayHeaderEle.textContent = `Weather Today in ${data.resolvedAddress}`;
-    feelsLikeEle.textContent = `${Math.floor(data.currentConditions.temp)}\u00B0F`;
+    feelsLikeEle.textContent = `${Math.floor(data.currentConditions.temp)}${units.degrees}`;
 
     // Format and populate sunrise and sunset times
     let sunriseTime = parse(data.currentConditions.sunrise, 'HH:mm:ss', new Date());
@@ -111,12 +140,12 @@ const renderTodayInfo = function(data) {
 
     // Add stats info text to each elemenet
     highLowEle.textContent = `${Math.floor(data.days[0].tempmax)}\u00B0/${Math.floor(data.days[0].tempmin)}\u00B0`;
-    windEle.textContent = `${data.currentConditions.windspeed}mph`;
+    windEle.textContent = `${data.currentConditions.windspeed}${units.speed}`;
     humidityEle.textContent = `${Math.floor(data.currentConditions.humidity)}%`;
     dewPointele.textContent = `${Math.floor(data.currentConditions.dew)}%`;
-    pressureEle.textContent = `${Number((Number(data.currentConditions.pressure) / inHgConversionValue)).toFixed(2)} in`;
+    pressureEle.textContent = `${Number((Number(data.currentConditions.pressure) / units.inHgConversionValue)).toFixed(units.toFixed)} ${units.pressure}`;
     uvIndexEle.textContent = `${data.currentConditions.uvindex} of 11`;
-    visibility.textContent = `${data.currentConditions.visibility} mi`
+    visibility.textContent = `${data.currentConditions.visibility} ${units.length}`;
     moonPhaseEle.textContent = parseMoonPhaseName(data.currentConditions.moonphase);
 }
 
@@ -137,7 +166,6 @@ const renderForecastInfo = function(data) {
     let forecastHours = document.querySelectorAll('.forecast-container .hour');
     const hourlyForecastData = parse24HourData(data.days, data.timezone);
     forecastHours.forEach((hour) => {
-        console.log('hour selected');
         // Declare query selectors under each forecast hour
         const timeEle = hour.querySelector('.time');
         const forecastImg = hour.querySelector('.icon');
