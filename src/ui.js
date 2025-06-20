@@ -123,9 +123,6 @@ const renderTodayInfo = function(data, units) {
     const visibility = document.querySelector('.visibility .stats');
     const moonPhaseEle = document.querySelector('.moon-phase .stats');
 
-    // Declare other constants
-    const inHgConversionValue = 33.8639;
-
     // Populate header with current info
     todayHeaderEle.textContent = `Weather Today in ${data.resolvedAddress}`;
     feelsLikeEle.textContent = `${Math.floor(data.currentConditions.temp)}${units.degrees}`;

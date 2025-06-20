@@ -17,7 +17,7 @@ const loadWeather = async function(location, system) {
 
 
 // Define variable to store location returned from API to site
-let currentLocation = 'Nashville, IL';
+let currentLocation;
 // Define user-selected variable for degree measurement system
 let degreeSystem = 'us';
 
@@ -37,7 +37,17 @@ degreesButton.addEventListener('click', () => {
 })
 
 // Execute primary function upon Dom loaded
-document.addEventListener('DOMContentLoaded', loadWeather('Nashville, IL', degreeSystem));
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        let ipData = await api.getIPData();
+        console.log(ipData);
+        currentLocation = `${ipData.city} ${ipData.subdivision} ${ipData.country}`;   
+        loadWeather(currentLocation, degreeSystem);
+    } catch {
+        currentLocation = `New York City, NY`;
+        loadWeather(currentLocation, degreeSystem);
+    }
+});
 
 // Declare interactable query selectors
 let searchInput = document.querySelector('#search');
