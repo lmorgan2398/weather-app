@@ -40,7 +40,6 @@ degreesButton.addEventListener('click', () => {
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         let ipData = await api.getIPData();
-        console.log(ipData);
         currentLocation = `${ipData.city} ${ipData.subdivision} ${ipData.country}`;   
         loadWeather(currentLocation, degreeSystem);
     } catch {
@@ -57,7 +56,6 @@ document.addEventListener('keydown', (e) => {
     if(e.key == 'Enter' && searchInput.value.trim(' ') !== ''){
         loadWeather(searchInput.value, degreeSystem)
             .then(() => {
-                console.log('I made it here');
                 searchInput.value = '';
             })
             .catch(console.log);
@@ -68,7 +66,6 @@ searchButton.addEventListener('click', () => {
     if(searchInput.value.trim(' ') !== '') {
         loadWeather(searchInput.value, degreeSystem)
             .then(() => {
-                console.log('I made it here');
                 searchInput.value = '';
             })
             .catch(console.log);
