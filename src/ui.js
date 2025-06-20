@@ -45,6 +45,7 @@ const renderData = function(data, system) {
     renderOverview(data, units);
     renderTodayInfo(data, units);
     renderForecastInfo(data);
+    renderTenDayInfo(data, units);
 }
 
 // Function to change display of degree measurement toggle button
@@ -241,5 +242,37 @@ const parse24HourData = function(days, timezone) {
     return hourlyData;
 }
 
+const renderTenDayInfo = function(data, units) {
+    let forecastDayEles = document.querySelectorAll('.day');
+    forecastDayEles.forEach((day) => {
+        // Select elements under each day
+        let dateEle = day.querySelector('.date');
+        let rainfallEle = day.querySelector('.rainfall-text');
+        let conditionEle = day.querySelector('.info .condition');
+        let maxMinEle = day.querySelector('.max-min');
+        let index = day.dataset.index;
+
+        // Set date to today or otherwise, day of week
+        if (index == 0) {
+            dateEle.textContent = 'Today';
+        } else {
+            let currentDay = parse(data.days[index].datetime, "yyyy-MM-dd", new Date());
+            let dayOfWeek = format(currentDay, 'EEEE');
+            if (index > 6) {
+                dateEle.textContent = `Next ${dayOfWeek}`;
+            } else {
+                dateEle.textContent = dayOfWeek;
+            }
+        }
+
+        rainfallEle.textContent = `${Math.floor(data.days[index].precipprob)}%`
+
+        let conditionEleSrc = parseConditionClass(data.days[index].conditions);
+        console.log(conditionEleSrc);
+        conditionEle.src = iconMap[conditionEleSrc];
+
+        maxMinEle.textContent = `${Math.floor(data.days[index].tempmax)}\u00B0 / ${Math.floor(data.days[index].tempmin)}\u00B0`;
+    })
+}
 
 export { renderData }
