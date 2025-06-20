@@ -140,7 +140,7 @@ const renderTodayInfo = function(data, units) {
     highLowEle.textContent = `${Math.floor(data.days[0].tempmax)}\u00B0/${Math.floor(data.days[0].tempmin)}\u00B0`;
     windEle.textContent = `${data.currentConditions.windspeed}${units.speed}`;
     humidityEle.textContent = `${Math.floor(data.currentConditions.humidity)}%`;
-    dewPointele.textContent = `${Math.floor(data.currentConditions.dew)}%`;
+    dewPointele.textContent = `${Math.floor(data.currentConditions.dew)}\u00B0`;
     pressureEle.textContent = `${Number((Number(data.currentConditions.pressure) / units.inHgConversionValue)).toFixed(units.toFixed)} ${units.pressure}`;
     uvIndexEle.textContent = `${data.currentConditions.uvindex} of 11`;
     visibility.textContent = `${data.currentConditions.visibility} ${units.length}`;
@@ -168,7 +168,6 @@ const renderForecastInfo = function(data) {
         const timeEle = hour.querySelector('.time');
         const forecastImg = hour.querySelector('.icon');
         const tempEle = hour.querySelector('.temp');
-        const rainfallImgEle = hour.querySelector('.rainfall-image');
         const rainfallEle = hour.querySelector('.rainfall-text');
 
         // Get index of element
