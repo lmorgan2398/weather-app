@@ -6,15 +6,15 @@ import * as api from './api.js';
 const loadWeather = async function(location, system) {
     try {
         const weatherData = await api.getWeatherData(location, system);
+        const rainfallData = await api.getRainfallData(location, system);
         currentLocation = weatherData.resolvedAddress;
-        ui.renderData(weatherData, system);
+        ui.renderData(weatherData, rainfallData, system);
         return true;
     } catch (err) {
         console.error('Weather loading failed:', err);
         throw err;
     }
 }
-
 
 // Define variable to store location returned from API to site
 let currentLocation;

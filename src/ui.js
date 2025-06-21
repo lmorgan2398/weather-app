@@ -19,7 +19,7 @@ const iconMap = {
     clear
 };
 
-const renderData = function(data, system) {
+const renderData = function(data, rainfall, system) {
     // Use provided measurement system to store measurement units in obj units
     let units = {};
     if (system == 'us') {
@@ -29,7 +29,8 @@ const renderData = function(data, system) {
         units.length = 'mi',
         units.speed = 'mph'
         units.inHgConversionValue = 33.8639;
-        units.toFixed = 2
+        units.toFixed = 2,
+        units.rainfall = 'in'
         }
     } else {
         {
@@ -38,14 +39,16 @@ const renderData = function(data, system) {
             units.length = 'km',
             units.speed = 'kmph'
             units.inHgConversionValue = 1;
-            units.toFixed = 0
+            units.toFixed = 0,
+            units.rainfall = 'mm'
         }
     }
     toggleDegreesButton(units);
     renderOverview(data, units);
     renderTodayInfo(data, units);
     renderForecastInfo(data);
-    renderTenDayInfo(data, units);
+    renderTenDayInfo(data);
+    renderWeeklyRainfallInfo(rainfall, units);
 }
 
 // Function to change display of degree measurement toggle button
@@ -241,8 +244,8 @@ const parse24HourData = function(days, timezone) {
     return hourlyData;
 }
 
-const renderTenDayInfo = function(data, units) {
-    let forecastDayEles = document.querySelectorAll('.day');
+const renderTenDayInfo = function(data) {
+    let forecastDayEles = document.querySelectorAll('.ten-day-forecast-container .day');
     forecastDayEles.forEach((day) => {
         // Select elements under each day
         let dateEle = day.querySelector('.date');
@@ -271,6 +274,30 @@ const renderTenDayInfo = function(data, units) {
         conditionEle.src = iconMap[conditionEleSrc];
 
         maxMinEle.textContent = `${Math.floor(data.days[index].tempmax)}\u00B0 / ${Math.floor(data.days[index].tempmin)}\u00B0`;
+    })
+}
+
+const renderWeeklyRainfallInfo = function(data, units) {
+    let rainfallDayEles = document.querySelectorAll('.rainfall-container .day');
+    rainfallDayEles.forEach((day) => {
+        // Select elements under each day
+        let dateEle = day.querySelector('.date');
+        let rainfallEle = day.querySelector('.rainfall-text');
+        let index = day.dataset.index;
+
+        // Set date to today
+        if (index == 7) {
+            dateEle.textContent = 'Today';
+        } else if (index == 6) {
+            dateEle.textContent = 'Yesterday';
+        } else {
+            let currentDate = parse(data.days[index].datetime, 'yyyy-MM-dd', new Date());
+            let formattedDate = format(currentDate, 'MMM dd');
+            dateEle.textContent = formattedDate;
+        }
+
+        // Give rainfall info
+        rainfallEle.textContent = `${data.days[index].precip} ${units.rainfall}`
     })
 }
 

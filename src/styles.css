@@ -336,12 +336,19 @@ body {
     width: .8rem;
 }
 
+/* Style container for rainfall and 10-day forecast */
+.ten-day-and-weekly-rainfall {
+    width: 100%;
+    display: flex;
+    gap: 1rem;
+}
+
 /* Style the 10-day forecast section */
 
 .ten-day {
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: 60%;
     background-color: white;
     border-radius: 6px;
 }
@@ -364,7 +371,7 @@ body {
     align-items: center;
 }
 
-.day { 
+.ten-day-forecast-container .day { 
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -398,4 +405,56 @@ body {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+}
+
+/* Styling for weekly rainfall */
+.weekly-rainfall {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    background-color: white;
+    border-radius: 6px;
+    height: min-content;
+}
+
+.weekly-rainfall-header {
+    background-color: rgb(34, 34, 65);
+    color: white;
+    padding: 1rem;
+    border-radius: 6px 6px 0px 0px;
+}
+
+.weekly-rainfall-header p {
+    font-size: 1.2rem;
+}
+
+.rainfall-container {
+    padding: .5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.rainfall-container .day { 
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    padding: .5rem 1rem;
+    border-bottom: 1px solid gray;
+}
+
+.day .rainfall {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.day .rainfall .rainfall-text {
+    width: 5rem;
+}
+
+.rainfall-container .day[data-index="0"] {
+    border-bottom: none;
 }
